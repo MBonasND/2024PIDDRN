@@ -1,5 +1,5 @@
 # 2023PIDDRN
-Supplemental codes for "A Physics-Informed, Double-Reservoir, Stochastic Deep Recurrent Neural Network for Calibrated Forecasts of High-Resolution and High-Frequency Wind Data" by Matthew Bonas and Stefano Castruccio
+Supplemental codes for "A Physics-Informed, Deep Double Reservoir Network for Forecasting Boundary Layer Wind" by Matthew Bonas, David H. Richter and Stefano Castruccio
 
 ## Data
 Folder containing the .RData file with the 8 Vicous Burgers' Equations simulated datasets used throughout the associated manuscript.

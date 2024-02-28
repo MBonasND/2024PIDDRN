@@ -1697,7 +1697,7 @@ combo_spiking = function(y.train,
         #DESN
         h.tild.out = cbind(h.tild.out, g.h(output.data[[ell]][,-1]))
         
-        #DSESN
+        #DLSM
         out.dat = output.data.spiking[[ell]][,-1]
         max.output = apply(out.dat, 1, max)
         min.output = apply(out.dat, 1, min)

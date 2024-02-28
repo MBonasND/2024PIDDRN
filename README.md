@@ -1,5 +1,5 @@
 # 2023PIDDRN
-Supplemental codes for "A Physics-Informed, Deep Double Reservoir Network for Forecasting Boundary Layer Wind" by Matthew Bonas, David H. Richter and Stefano Castruccio
+Supplemental codes for "A Physics-Informed, Deep Double Reservoir Network for Forecasting Boundary Layer Velocity" by Matthew Bonas, David H. Richter and Stefano Castruccio
 
 ## Data
 Folder containing the .RData file with the 8 Vicous Burgers' Equations simulated datasets used throughout the associated manuscript.

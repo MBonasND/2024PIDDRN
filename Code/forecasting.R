@@ -1,8 +1,8 @@
-###############################################
-###############################################
-### Forecasting with DESN, DDRN, and PIDDRN ###
-###############################################
-###############################################
+######################################################
+######################################################
+### Forecasting with DESN, DDRN, PIDESN and PIDDRN ###
+######################################################
+######################################################
 
 #clear environment
 rm(list = ls()); gc()
@@ -21,11 +21,11 @@ library(foreach)
 library(doSNOW)
 
 #load functions
-source('data_processing.R')
-source('deep_functions_physics.R')
+source('Code/data_processing.R')
+source('Code/deep_functions_physics.R')
 
 #specify cores
-options(cores = 4)
+options(cores = 10)
 
 #PDE
 burger = function(u, xvals, time, nu)
@@ -39,8 +39,8 @@ burger = function(u, xvals, time, nu)
 }
 
 #load data and clean
-load('AllBurgerData.RData')
-load('AllBurgerDataNames.RData')
+load('Data/AllBurgerData.RData')
+load('Data/AllBurgerDataNames.RData')
 index = 3
 dat = burger_data[[index]]
 viscosity = as.numeric(str_split(burger_list_files, pattern = '_')[[index]][3])
@@ -70,7 +70,7 @@ pi.w = rep(0.1, layers)
 eta.w = rep(1,layers)
 pi.win = rep(0.1, layers)
 eta.win = rep(1,layers)
-iterations = 100
+iterations = 20
 tau = 50
 validLen = 0
 trainLen = 450-tau-validLen
@@ -98,7 +98,7 @@ designMatrixOutSample = input.dat$designMatrixOutSample
 addScaleMat = input.dat$addScaleMat
 
 
-#start = proc.time()
+start = proc.time()
 testing = deep.esn(y.train = y.train,
                    x.insamp = designMatrix,
                    x.outsamp = designMatrixOutSample,
@@ -125,7 +125,7 @@ testing = deep.esn(y.train = y.train,
                    parallel = TRUE,
                    verbose = FALSE, 
                    logNorm = FALSE)
-#proc.time()-start
+proc.time()-start
 
 
 
@@ -153,7 +153,7 @@ pi.w = rep(0.1, layers)
 eta.w = rep(1,layers)
 eta.win = rep(1,layers)
 pi.win = rep(0.1, layers)
-iterations = 100
+iterations = 20
 tau = 50
 validLen = 0
 trainLen = 450-tau-validLen
@@ -239,10 +239,105 @@ ddrn_forcs = testing$forecastmean
 
   
 ##########################
+### PIDESN Forecasting ###
+##########################
+
+
+#LONGER RUN TIME --- INCREASE CORES TO IMPROVE SPEED
+
+
+#Parameter specification
+layers = 2
+n.h = c(rep(150,layers))
+nu = c(0.8, 1.0)
+lambda.r = 1e-3
+m = 1
+alpha = 0.02
+reduced.units = 20
+stepmax = 200000
+subsample = 0.15
+rho = 0.5 #chi in manuscript
+
+#Fixed parameters
+pi.w = rep(0.1, layers)
+eta.w = rep(1,layers)
+pi.win = rep(0.1, layers)
+eta.win = rep(1,layers)
+iterations = 20
+tau = 50
+validLen = 0
+trainLen = 450-tau-validLen
+testLen = 50
+locations = total_locs
+
+#Create training and testing sets
+sets = cttv(rawData, tau, trainLen, testLen = testLen)
+new.train = sets$yTrain
+testindex = sets$xTestIndex
+
+#Generating input data
+input.dat = gen.input.data(trainLen = trainLen,
+                           m = m,
+                           tau = tau,
+                           yTrain = (new.train),
+                           rawData = (rawData),
+                           locations = locations,
+                           xTestIndex = testindex,
+                           testLen = testLen)
+y.scale = input.dat$y.scale
+y.train = input.dat$in.sample.y
+designMatrix = input.dat$designMatrix
+designMatrixOutSample = input.dat$designMatrixOutSample
+addScaleMat = input.dat$addScaleMat
+
+
+start = proc.time()
+testing = deep.esn.physics(y.train = y.train,
+                           x.insamp = designMatrix,
+                           x.outsamp = designMatrixOutSample,
+                           y.test = sets$yTest,
+                           n.h = n.h,
+                           nu = nu,
+                           pi.w = pi.w, 
+                           pi.win = pi.win,
+                           eta.w = eta.w,
+                           eta.win = eta.win,
+                           lambda.r = lambda.r,
+                           alpha = alpha,
+                           m = m,
+                           iter = iterations,
+                           future = testLen,
+                           layers = layers,
+                           reduced.units = reduced.units,
+                           startvalues = NULL,
+                           activation = 'tanh',
+                           distribution = 'Unif',
+                           physics = TRUE,
+                           PDE = burger,
+                           PDE_params = list('nu' = viscosity/pi),
+                           time_vals = 3/1000,
+                           location_vals = xvals[wanted_locs],
+                           stepmax = stepmax,
+                           subsample = subsample,
+                           rho = rho,
+                           scale.factor = y.scale,
+                           scale.matrix = addScaleMat,
+                           fork = FALSE,
+                           logNorm = FALSE)
+proc.time()-start
+
+
+
+pidesn_forcs = testing$forecastmean
+
+
+
+
+##########################
 ### PIDDRN Forecasting ###
 ##########################
 
-#VERY LONG RUN TIME --- INCREASE CORES TO IMPROVE SPEED
+#LONGEST RUN TIME --- INCREASE CORES TO IMPROVE SPEED
 
 
 #Parameter specification

@@ -42,13 +42,6 @@ ns_equation = function(u_bar, yvals, nu, u_tau, delta, kappa = 0.15)
 }
 
 
-#Load Data - needs to be obtain from private database via request
-# load('Data/WaterField_U_Subsample_Agg.RData')
-# load('Data/WaterField_Coords_Subsample.RData')
-# rawData = (U_samp_agg)
-# yvals = coords_samp[,2]
-
-
 
 ########################
 ### DESN Forecasting ###

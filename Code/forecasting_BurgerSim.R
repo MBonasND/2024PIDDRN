@@ -22,7 +22,7 @@ library(doSNOW)
 
 #load functions
 source('Code/data_processing.R')
-source('Code/deep_functions_physics.R')
+source('Code/deep_functions_physics_BurgerSim.R')
 
 #specify cores
 options(cores = 10)

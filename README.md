@@ -1,4 +1,4 @@
-# 2023PIDDRN
+# 2024PIDDRN
 Supplemental codes for "A Physics-Informed, Deep Double Reservoir Network for Forecasting Boundary Layer Velocity" by Matthew Bonas, David H. Richter and Stefano Castruccio
 
 ## Data

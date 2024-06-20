@@ -21,8 +21,8 @@ library(foreach)
 library(doSNOW)
 
 #load functions
-source('Code/data_processing.R')
-source('Code/deep_functions_physics_BurgerSim.R')
+source('data_processing.R')
+source('deep_functions_physics_BurgerSim.R')
 
 #specify cores
 options(cores = 10)
@@ -39,8 +39,8 @@ burger = function(u, xvals, time, nu)
 }
 
 #load data and clean
-load('Data/AllBurgerData.RData')
-load('Data/AllBurgerDataNames.RData')
+load('AllBurgerData.RData')
+load('AllBurgerDataNames.RData')
 index = 3
 dat = burger_data[[index]]
 viscosity = as.numeric(str_split(burger_list_files, pattern = '_')[[index]][3])

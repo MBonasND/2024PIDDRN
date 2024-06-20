@@ -21,8 +21,8 @@ library(foreach)
 library(doSNOW)
 
 #load functions
-source('Code/data_processing.R')
-source('Code/deep_functions_physics_WaterApplication.R')
+source('data_processing.R')
+source('deep_functions_physics_WaterApplication.R')
 
 #specify cores
 options(cores = 10)
